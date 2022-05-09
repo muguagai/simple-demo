@@ -23,9 +23,15 @@ type Comment struct {
 }
 
 type User struct {
-	Id            int64  `json:"id,omitempty"`
-	Name          string `json:"name,omitempty"`
-	FollowCount   int64  `json:"follow_count,omitempty"`
-	FollowerCount int64  `json:"follower_count,omitempty"`
-	IsFollow      bool   `json:"is_follow,omitempty"`
+	Id            int64  `json:"id,omitempty" gorm:"column:id"`
+	Password      string `json:"password,omitempty" gorm:"column:password"`
+	Name          string `json:"name,omitempty" gorm:"column:name"`
+	FollowCount   int64  `json:"follow_count,omitempty" gorm:"column:followcount"`
+	FollowerCount int64  `json:"follower_count,omitempty" gorm:"column:followercount"`
+	IsFollow      bool   `json:"is_follow,omitempty" gorm:"column:IsFollow"`
+}
+type Emp struct {
+	ID   int64
+	Name string `gorm:"default:'大狼'"`
+	Age  int64
 }
