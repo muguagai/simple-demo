@@ -16,7 +16,24 @@ type FeedResponse struct {
 func Feed(c *gin.Context) {
 	c.JSON(http.StatusOK, FeedResponse{
 		Response:  Response{StatusCode: 0},
-		VideoList: DemoVideos,
+		VideoList: QueryByCreatedTime(),
 		NextTime:  time.Now().Unix(),
 	})
 }
+
+func QueryByCreatedTime() []Video {
+	var Videos []Video
+	db.Table("videos").Order("create_time desc").Limit(30).Find(&Videos)
+	//将Author和Video批量关联
+	//不能使用range遍历
+	for i := 0; i < len(Videos); i++ {
+		var user User
+		db.Where("id = ?", Videos[i].AuthorID).Find(&user)
+		Videos[i].Author = user
+	}
+	return Videos
+}
+
+/*func CreatVideoinfo() map[string]User {
+	videos := QueryByCreatedTime()
+}*/
