@@ -1,8 +1,9 @@
-package controller
+package respository
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Response struct {
@@ -23,8 +24,11 @@ type Video struct {
 }
 
 type Comment struct {
-	Id         int64  `json:"id,omitempty"`
-	User       User   `json:"user"`
+	Id         int64 `json:"id,omitempty"`
+	UserID     int64
+	User       User `json:"user" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	VideoID    int64
+	Video      Video  `json:"user" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Content    string `json:"content,omitempty"`
 	CreateDate string `json:"create_date,omitempty"`
 }
@@ -32,15 +36,23 @@ type Comment struct {
 type User struct {
 	Id            int64  `json:"id,omitempty" gorm:"column:id"`
 	Password      string `json:"password,omitempty" gorm:"column:password"`
-	Name          string `json:"name,omitempty" gorm:"column:name"`
+	Name          string `json:"name,omitempty" gorm:"unique_index,column:name"`
 	FollowCount   int64  `json:"follow_count,omitempty" gorm:"column:followcount"`
 	FollowerCount int64  `json:"follower_count,omitempty" gorm:"column:followercount"`
 	IsFollow      bool   `json:"is_follow,omitempty" gorm:"column:IsFollow"`
+	Token         string `gorm:"unique_index,column:token"`
 }
 
 type UserLike struct {
 	gorm.Model
 	LikeId     int64
 	VideoId    int64
+	IsFavorite bool
+}
+
+type FollowFollower struct {
+	gorm.Model
+	FollowId   int64
+	FollowerId int64
 	IsFavorite bool
 }

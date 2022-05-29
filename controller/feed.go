@@ -1,39 +1,29 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"time"
+
+	"github.com/RaymondCode/simple-demo/respository"
+
+	"github.com/gin-gonic/gin"
 )
 
 type FeedResponse struct {
-	Response
-	VideoList []Video `json:"video_list,omitempty"`
-	NextTime  int64   `json:"next_time,omitempty"`
+	respository.Response
+	VideoList []respository.Video `json:"video_list,omitempty"`
+	NextTime  int64               `json:"next_time,omitempty"`
 }
 
+//获取视频流
 // Feed same demo video list for every request
 func Feed(c *gin.Context) {
+	videoList, nextTime := respository.QueryByCreatedTime()
+	if len(videoList) == 0 {
+		videoList = DemoVideos
+	}
 	c.JSON(http.StatusOK, FeedResponse{
-		Response:  Response{StatusCode: 0},
-		VideoList: QueryByCreatedTime(),
-		NextTime:  time.Now().Unix(),
+		Response:  respository.Response{StatusCode: 0},
+		VideoList: videoList,
+		NextTime:  nextTime,
 	})
 }
-
-func QueryByCreatedTime() []Video {
-	var Videos []Video
-	db.Table("videos").Order("create_time desc").Limit(30).Find(&Videos)
-	//将Author和Video批量关联
-	//不能使用range遍历
-	for i := 0; i < len(Videos); i++ {
-		var user User
-		db.Where("id = ?", Videos[i].AuthorID).Find(&user)
-		Videos[i].Author = user
-	}
-	return Videos
-}
-
-/*func CreatVideoinfo() map[string]User {
-	videos := QueryByCreatedTime()
-}*/

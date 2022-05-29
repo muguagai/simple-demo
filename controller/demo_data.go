@@ -1,6 +1,8 @@
 package controller
 
-var DemoVideos = []Video{
+import "github.com/RaymondCode/simple-demo/respository"
+
+var DemoVideos = []respository.Video{
 	{
 		Id:            1,
 		Author:        DemoUser,
@@ -21,7 +23,7 @@ var DemoVideos = []Video{
 	},
 }
 
-var DemoComments = []Comment{
+var DemoComments = []respository.Comment{
 	{
 		Id:         1,
 		User:       DemoUser,
@@ -30,10 +32,10 @@ var DemoComments = []Comment{
 	},
 }
 
-var DemoUser = User{
+var DemoUser = respository.User{
 	Id:            1,
-	Name:          "TestUser",
-	FollowCount:   0,
-	FollowerCount: 0,
+	Name:          "666",
+	FollowCount:   100,
+	FollowerCount: 100,
 	IsFollow:      false,
 }

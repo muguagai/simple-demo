@@ -1,13 +1,19 @@
-package controller
+package respository
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestDB(t *testing.T) {
 	Init()
-
-	db.AutoMigrate(&UserLike{})
+	Db.AutoMigrate(&User{})
+	Db.AutoMigrate(&Video{})
+	Db.AutoMigrate(&UserLike{})
+	Db.AutoMigrate(&Comment{})
+	Db.AutoMigrate(&FollowFollower{})
+	user, _ := userDao.QueryUserById(537331302576164864)
+	fmt.Println(user)
 	/*var video = Video{
 		Id:            1,
 		Author:        DemoUser,
