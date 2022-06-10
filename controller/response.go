@@ -6,14 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/**
- * @Author huchao
- * @Description //TODO 封装响应
- * @Date 22:11 2022/2/10
- * @Param
- * @return
- **/
-
 type ResponseData struct {
 	Code    MyCode      `json:"code"`
 	Message string      `json:"message"`

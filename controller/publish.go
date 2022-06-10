@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/RaymondCode/simple-demo/service"
+
 	"github.com/RaymondCode/simple-demo/respository"
 
 	"github.com/RaymondCode/simple-demo/util"
@@ -19,6 +21,7 @@ type VideoListResponse struct {
 
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
+	title := c.PostForm("title")
 	worker, err := util.NewWorker(1)
 	if err != nil {
 		fmt.Println(err)
@@ -45,15 +48,22 @@ func Publish(c *gin.Context) {
 	var video = respository.Video{
 		Id:      worker.GetId(),
 		Author:  user,
-		PlayUrl: "http://10.60.160.81:8080/static/" + finalName,
+		PlayUrl: "http://192.168.1.7:8080/static/" + finalName,
 		//封面固定
-		CoverUrl:      "http://10.60.160.81:8080/static/fengmian.webp",
+		CoverUrl:      "http://192.168.1.7:8080/static/fengmian.webp",
 		FavoriteCount: 0,
 		CommentCount:  0,
 		IsFavorite:    false,
 		CreateTime:    time.Now(),
+		Title:         title,
 	}
-	respository.Db.Create(&video)
+	if err := service.PublishVideo(video); err != nil {
+		c.JSON(http.StatusOK, respository.Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
+		})
+		return
+	}
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
 		c.JSON(http.StatusOK, respository.Response{
 			StatusCode: 1,
@@ -61,7 +71,6 @@ func Publish(c *gin.Context) {
 		})
 		return
 	}
-
 	c.JSON(http.StatusOK, respository.Response{
 		StatusCode: 0,
 		StatusMsg:  finalName + " uploaded successfully",

@@ -21,6 +21,7 @@ type Video struct {
 	CommentCount  int64     `json:"comment_count,omitempty"`
 	IsFavorite    bool      `json:"is_favorite,omitempty"`
 	CreateTime    time.Time `gorm:"column:create_time"`
+	Title         string    `json:"title" gorm:"column:title"`
 }
 
 type Comment struct {

@@ -80,16 +80,22 @@ func Register(c *gin.Context) {
 
 func Login(c *gin.Context) {
 	username := c.Query("username")
-	//password := c.Query("password")
+	password := c.Query("password")
 
 	token := userDao.QueryTokenByUserName(username)
 
 	if user, exist := respository.UsersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: respository.Response{StatusCode: 0},
-			UserId:   user.Id,
-			Token:    token,
-		})
+		if user.Password == password {
+			c.JSON(http.StatusOK, UserLoginResponse{
+				Response: respository.Response{StatusCode: 0},
+				UserId:   user.Id,
+				Token:    token,
+			})
+		} else {
+			c.JSON(http.StatusOK, UserLoginResponse{
+				Response: respository.Response{StatusCode: 1, StatusMsg: "密码错误"},
+			})
+		}
 	} else {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: respository.Response{StatusCode: 1, StatusMsg: "User doesn't exist"},

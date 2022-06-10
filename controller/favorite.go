@@ -2,9 +2,11 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
+
+	"github.com/RaymondCode/simple-demo/respository/redis"
 
 	"github.com/RaymondCode/simple-demo/respository"
+	"github.com/RaymondCode/simple-demo/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,31 +16,8 @@ func FavoriteAction(c *gin.Context) {
 	user := respository.UsersLoginInfo[token]
 	if _, exist := respository.UsersLoginInfo[token]; exist {
 		videoid := c.Query("video_id")
-		var isFavorite bool
-		vid, _ := strconv.ParseInt(videoid, 10, 64)
 		action_type := c.Query("action_type")
-		var video respository.Video
-		respository.Db.Where("id = ?", videoid).Find(&video)
-		if action_type == "1" {
-			video.FavoriteCount++
-			isFavorite = true
-		}
-		if action_type == "2" {
-			video.FavoriteCount--
-			isFavorite = false
-		}
-		respository.Db.Save(&video)
-		//查询数据库是否存在该记录
-		var find bool
-		userLike, find := respository.NewUserLikeDaoInstance().QueryUserLikeByVideoIDandLikeId(vid, user.Id)
-		if find == true {
-			userLike.IsFavorite = isFavorite
-			userLike.VideoId = vid
-			userLike.LikeId = user.Id
-			respository.Db.Save(&userLike)
-		} else {
-			respository.Db.Create(&userLike)
-		}
+		service.FavoriteAction(videoid, action_type, user)
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 0})
 	} else {
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
@@ -49,10 +28,12 @@ func FavoriteAction(c *gin.Context) {
 func FavoriteList(c *gin.Context) {
 	token := c.Query("token")
 	user := respository.UsersLoginInfo[token]
-	videos := respository.NewUserLikeDaoInstance().QueryFavoriteListByUserId(user.Id)
+	//videos := respository.NewUserLikeDaoInstance().QueryFavoriteListByUserId(user.Id)
+	videos := service.FavouriteList(user.Id)
 	if videos == nil {
 		videos = DemoVideos
 	}
+	redis.GetFavouriteVideo(user.Id)
 	c.JSON(http.StatusOK, VideoListResponse{
 
 		Response: respository.Response{

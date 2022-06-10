@@ -23,4 +23,7 @@ func TestDB(t *testing.T) {
 		CommentCount:  0,
 		IsFavorite:    false,
 	}*/
+
+	iDs := GetVideoListByIDs([]int64{539237567535517696, 539239326517563392})
+	fmt.Println(iDs)
 }

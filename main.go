@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/RaymondCode/simple-demo/respository/redis"
+
 	"github.com/RaymondCode/simple-demo/respository"
 	"github.com/RaymondCode/simple-demo/util"
 	"github.com/gin-gonic/gin"
@@ -23,6 +25,9 @@ func Init() error {
 		return err
 	}
 	if err := util.InitLogger(); err != nil {
+		return err
+	}
+	if err := redis.InitClient(); err != nil {
 		return err
 	}
 	return nil
