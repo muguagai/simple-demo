@@ -33,5 +33,10 @@ func GetVideoList(start int64) (videos []respository.Video, end int64) {
 	IDS := util.String2Int(ids)
 	//根据ID查询视频列表并且按照IDS的排序查询
 	Videos := respository.GetVideoListByIDs(IDS)
+	for i := 0; i < len(Videos); i++ {
+		var user respository.User
+		respository.Db.Where("id = ?", Videos[i].AuthorID).Find(&user)
+		Videos[i].Author = user
+	}
 	return Videos, End
 }
