@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"bytes"
 	"fmt"
+	"log"
 	"net/http"
+	"os/exec"
 	"path/filepath"
 	"time"
 
@@ -12,6 +15,7 @@ import (
 
 	"github.com/RaymondCode/simple-demo/util"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type VideoListResponse struct {
@@ -45,25 +49,10 @@ func Publish(c *gin.Context) {
 	user := respository.UsersLoginInfo[token]
 	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
 	saveFile := filepath.Join("./public/", finalName)
-	var video = respository.Video{
-		Id:      worker.GetId(),
-		Author:  user,
-		PlayUrl: "http://192.168.1.7:8080/static/" + finalName,
-		//封面固定
-		CoverUrl:      "http://192.168.1.7:8080/static/fengmian.webp",
-		FavoriteCount: 0,
-		CommentCount:  0,
-		IsFavorite:    false,
-		CreateTime:    time.Now(),
-		Title:         title,
-	}
-	if err := service.PublishVideo(video); err != nil {
-		c.JSON(http.StatusOK, respository.Response{
-			StatusCode: 1,
-			StatusMsg:  err.Error(),
-		})
-		return
-	}
+	guid := uuid.New()
+	guidStr := guid.String()
+	coverFile := filepath.Join("./public/", guidStr+"_cover.png")
+
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
 		c.JSON(http.StatusOK, respository.Response{
 			StatusCode: 1,
@@ -71,6 +60,46 @@ func Publish(c *gin.Context) {
 		})
 		return
 	}
+
+	// 抽取视频封面 ffmpeg - start
+	exec_ffmpeg_extract_cmd := "ffmpeg -i " + saveFile + " -ss 00:00:00 -frames:v 1 " + coverFile
+	println("to tun:", exec_ffmpeg_extract_cmd)
+
+	cmdArguments := []string{"-i", saveFile, "-ss", "00:00:00",
+		"-frames:v", "1", coverFile}
+
+	cmd := exec.Command("ffmpeg", cmdArguments...)
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	errFFMPEG := cmd.Run()
+	if errFFMPEG != nil {
+		log.Fatal(errFFMPEG)
+	}
+	fmt.Printf("command output: %q", out.String())
+	// 抽取视频封面 ffmpeg - end
+
+	var video = respository.Video{
+		Id:      worker.GetId(),
+		Author:  user,
+		PlayUrl: "http://192.168.137.1:8080/static/" + finalName,
+		//封面固定
+		CoverUrl:      "http://192.168.137.1:8080/static/" + guidStr + "_cover.png",
+		FavoriteCount: 0,
+		CommentCount:  0,
+		IsFavorite:    false,
+		CreateTime:    time.Now(),
+		Title:         title,
+	}
+
+	if err := service.PublishVideo(video); err != nil {
+		c.JSON(http.StatusOK, respository.Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, respository.Response{
 		StatusCode: 0,
 		StatusMsg:  finalName + " uploaded successfully",
