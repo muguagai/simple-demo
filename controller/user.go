@@ -48,24 +48,23 @@ func Register(c *gin.Context) {
 	}
 	username := c.Query("username")
 	password := c.Query("password")
-
-	token, err := jwt.GenToken(username, password)
-	if err != nil {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: respository.Response{StatusCode: 1, StatusMsg: "获取token失败"},
-		})
-	}
 	if userDao.CheckUserExist(username) != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: respository.Response{StatusCode: 1, StatusMsg: "用户名已存在"},
 		})
 	} else {
+		token, err := jwt.GenToken(username, password)
+		if err != nil {
+			c.JSON(http.StatusOK, UserLoginResponse{
+				Response: respository.Response{StatusCode: 1, StatusMsg: "生成token失败"},
+			})
+		}
 		//自增ID
 		atomic.AddInt64(&userIdSequence, 1)
 		newUser := respository.User{
 			Id:       worker.GetId(),
 			Name:     username,
-			Password: password,
+			Password: util.MD5(password),
 			Token:    token,
 		}
 		respository.Db.Create(&newUser)
@@ -73,7 +72,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: respository.Response{StatusCode: 0},
 			UserId:   userIdSequence,
-			Token:    username + password,
+			Token:    token,
 		})
 	}
 }
