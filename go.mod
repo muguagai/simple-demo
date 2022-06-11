@@ -6,8 +6,8 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/google/uuid v1.3.0
 	github.com/juju/ratelimit v1.0.1
-	github.com/liamylian/values v1.0.0
 	go.uber.org/zap v1.21.0
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.5
