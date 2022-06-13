@@ -9,7 +9,6 @@
 6. 将respository/db_init.go中的"root:123@tcp"中的root和111111分别替换成你的mysql账户和密码
 7. 注释db_init.go中的UsersLoginInfo = CreatUserinfo()
 8. 运行命令  go test -v db_test.go db_init.go common.go user.go，否则会报undefined的错，错误原因参考：https://blog.csdn.net/love666666shen/article/details/119929929
-9. 取消5中的注释
 10. 将controller/publish.go中的ip地址替换成自己本地的
 11. 需要下载ffmpeg，https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip；之后解压，将bin目录配置到系统环境变量Path中
 12. 进入项目根目录，运行go build && ./simple-demo（如果go build需要下载但是速度慢，可以运行“go env -w GOPROXY=https://goproxy.cn,direct”）
