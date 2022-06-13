@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"fmt"
+	"github.com/RaymondCode/simple-demo/config"
 	"log"
 	"net/http"
 	"os/exec"
@@ -78,13 +79,11 @@ func Publish(c *gin.Context) {
 	}
 	fmt.Printf("command output: %q", out.String())
 	// 抽取视频封面 ffmpeg - end
-
 	var video = respository.Video{
-		Id:      worker.GetId(),
-		Author:  user,
-		PlayUrl: "http://192.168.137.1:8080/static/" + finalName,
-		//封面固定
-		CoverUrl:      "http://192.168.137.1:8080/static/" + guidStr + "_cover.png",
+		Id:            worker.GetId(),
+		Author:        user,
+		PlayUrl:       "http://" + config.Ip.String() + ":8080/static/" + finalName,
+		CoverUrl:      "http://" + config.Ip.String() + ":8080/static/" + guidStr + "_cover.png",
 		FavoriteCount: 0,
 		CommentCount:  0,
 		IsFavorite:    false,

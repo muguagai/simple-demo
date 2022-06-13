@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/RaymondCode/simple-demo/config"
 	"os"
 
 	"github.com/RaymondCode/simple-demo/respository/redis"
@@ -14,6 +15,7 @@ func main() {
 	if err := Init(); err != nil {
 		os.Exit(-1)
 	}
+
 	r := gin.Default()
 
 	initRouter(r)
@@ -30,5 +32,6 @@ func Init() error {
 	if err := redis.InitClient(); err != nil {
 		return err
 	}
+	config.GetAddress()
 	return nil
 }

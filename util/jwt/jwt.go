@@ -27,11 +27,6 @@ func keyFunc(_ *jwt.Token) (i interface{}, err error) {
 //定义JWT的过期时间
 const TokenExpireDuration = time.Hour * 1000000
 
-/**
- * @Author huchao
- * @Description //TODO 生成JWT
- * @Date 9:42 2022/2/11
- **/
 // GenToken 生成access token 和 refresh token
 func GenToken(username string, password string) (aToken string, err error) {
 	// 创建一个我们自己的声明
@@ -45,13 +40,6 @@ func GenToken(username string, password string) (aToken string, err error) {
 	}
 	// 加密并获得完整的编码后的字符串token
 	aToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, c).SignedString(mySecret)
-
-	// refresh token 不需要存任何自定义数据
-	/*	rToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Second * 30).Unix(), // 过期时间
-			Issuer:    "muguagai",                              // 签发人
-		}).SignedString(mySecret)
-		// 使用指定的secret签名并获得完整的编码后的字符串token*/
 	return
 }
 

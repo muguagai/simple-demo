@@ -32,8 +32,8 @@ func RelationAction(c *gin.Context) {
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User is Author"})
 	} else if _, exist := respository.UsersLoginInfo[token]; exist {
 		if actiontype == "1" {
-			follow.FollowCount++
-			follower.FollowerCount++
+			follow.FollowerCount++
+			follower.FollowCount++
 			respository.NewUserDaoInstance().SaveUser(follower)
 			respository.NewUserDaoInstance().SaveUser(*follow)
 			if find != nil {
@@ -41,19 +41,25 @@ func RelationAction(c *gin.Context) {
 				follow_follower.FollowerId = follower.Id
 				follow_follower.IsFavorite = true
 				respository.Db.Save(&follow_follower)
+				respository.Db.Save(&follower)
+				respository.Db.Save(&follow)
 			} else {
 				respository.Db.Create(&follow_follower)
+				respository.Db.Save(&follower)
+				respository.Db.Save(&follow)
 			}
 		}
 		if actiontype == "2" {
-			follow.FollowCount--
-			follower.FollowerCount--
+			follow.FollowerCount--
+			follower.FollowCount--
 			respository.NewUserDaoInstance().SaveUser(follower)
 			respository.NewUserDaoInstance().SaveUser(*follow)
 			follow_follower.FollowId = follow.Id
 			follow_follower.FollowerId = follower.Id
 			follow_follower.IsFavorite = false
 			respository.Db.Save(&follow_follower)
+			respository.Db.Save(&follower)
+			respository.Db.Save(&follow)
 		}
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 0})
 	} else {

@@ -71,7 +71,7 @@ func Register(c *gin.Context) {
 		respository.UsersLoginInfo[token] = newUser
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: respository.Response{StatusCode: 0},
-			UserId:   userIdSequence,
+			UserId:   newUser.Id,
 			Token:    token,
 		})
 	}
@@ -82,7 +82,7 @@ func Login(c *gin.Context) {
 	password := c.Query("password")
 
 	token := userDao.QueryTokenByUserName(username)
-
+	password = util.MD5(password)
 	if user, exist := respository.UsersLoginInfo[token]; exist {
 		if user.Password == password {
 			c.JSON(http.StatusOK, UserLoginResponse{

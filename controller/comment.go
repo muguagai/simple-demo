@@ -55,6 +55,11 @@ func CommentList(c *gin.Context) {
 	videoid := c.Query("video_id")
 	vid, _ := strconv.ParseInt(videoid, 10, 64)
 	comments := respository.QueryCommentListByVideoid(vid)
+	for i := 0; i < len(comments); i++ {
+		var user respository.User
+		respository.Db.Where("id = ?", comments[i].UserID).Find(&user)
+		comments[i].User = user
+	}
 	c.JSON(http.StatusOK, CommentListResponse{
 		Response:    respository.Response{StatusCode: 0},
 		CommentList: comments,
