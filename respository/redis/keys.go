@@ -10,6 +10,5 @@ const (
 	KeyVideoScoreZSet      = "douyin:video:score"  // zset;帖子及投票分数定义
 	KeyVideoLikedSetPrefix = "douyin:video:liked:" // set;记录视频点赞用户id;
 	KeyUserLikedHashPrefix = "douyin:user:liked:"  //set;记录用户id的视频点赞;
-
 	//KeyCommunityPostSetPrefix = "bluebell:community:" // set保存每个分区下帖子的id
 )

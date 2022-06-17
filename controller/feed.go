@@ -20,12 +20,13 @@ type FeedResponse struct {
 //获取视频流
 func Feed(c *gin.Context) {
 	//videoList, nextTime := respository.QueryByCreatedTime()
+	token := c.Query("token")
 	val := c.Query("latest_time")
 	start, _ := strconv.ParseInt(val, 10, 64)
 	if time.Now().Unix() >= start/1000 && time.Now().Unix() <= (start/1000+500) {
 		start = 0
 	}
-	videoList, next := service.GetVideoList(start)
+	videoList, next := service.GetVideoList(start, token)
 	if len(videoList) == 0 {
 		videoList = DemoVideos
 	}

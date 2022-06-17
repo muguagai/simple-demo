@@ -18,10 +18,10 @@ const (
 )
 
 func LikedForVideo(videoID string, isFavorite bool, userID int64) (err error) {
-	uid := strconv.FormatInt(userID, 10)
+	//uid := strconv.FormatInt(userID, 10)
 	pipeline := client.TxPipeline()
 	var op float64
-	key := KeyUserLikedHashPrefix + uid
+	key := KeyUserLikedHashPrefix
 	videokey := KeyVideoLikedSetPrefix + videoID
 	if isFavorite == true {
 		//将videoid添加到用户喜爱列表
@@ -30,7 +30,6 @@ func LikedForVideo(videoID string, isFavorite bool, userID int64) (err error) {
 		pipeline.SAdd(videokey, userID)
 	} else {
 		op = -1
-		pipeline.SRem(key, videoID)
 		pipeline.SRem(videokey, userID)
 	}
 

@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/RaymondCode/simple-demo/service"
+
 	"github.com/RaymondCode/simple-demo/respository"
 	"github.com/gin-gonic/gin"
 )
@@ -22,47 +24,20 @@ func RelationAction(c *gin.Context) {
 	follower := respository.UsersLoginInfo[token]
 	actiontype := c.Query("action_type")
 	var follow_follower respository.FollowFollower
+	//作者是否存在
 	follow, err := respository.NewUserDaoInstance().QueryUserById(touserid)
 	find := respository.Db.Table("follow_followers").Where("follow_id = ?", follow.Id).Where("follower_id = ?", follower.Id).Find(&follow_follower)
 	if err != nil {
-		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "Author doesn't exist"})
 	}
 	if touserid == follower.Id {
 		//作者不能关注自己
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User is Author"})
 	} else if _, exist := respository.UsersLoginInfo[token]; exist {
-		if actiontype == "1" {
-			follow.FollowerCount++
-			follower.FollowCount++
-			respository.NewUserDaoInstance().SaveUser(follower)
-			respository.NewUserDaoInstance().SaveUser(*follow)
-			if find != nil {
-				follow_follower.FollowId = follow.Id
-				follow_follower.FollowerId = follower.Id
-				follow_follower.IsFavorite = true
-				respository.Db.Save(&follow_follower)
-				respository.Db.Save(&follower)
-				respository.Db.Save(&follow)
-			} else {
-				respository.Db.Create(&follow_follower)
-				respository.Db.Save(&follower)
-				respository.Db.Save(&follow)
-			}
-		}
-		if actiontype == "2" {
-			follow.FollowerCount--
-			follower.FollowCount--
-			respository.NewUserDaoInstance().SaveUser(follower)
-			respository.NewUserDaoInstance().SaveUser(*follow)
-			follow_follower.FollowId = follow.Id
-			follow_follower.FollowerId = follower.Id
-			follow_follower.IsFavorite = false
-			respository.Db.Save(&follow_follower)
-			respository.Db.Save(&follower)
-			respository.Db.Save(&follow)
-		}
-		c.JSON(http.StatusOK, respository.Response{StatusCode: 0})
+		//用户存在
+		service.RelationAction(follow, actiontype, follower, follow_follower, find)
 	} else {
+		//用户不存在
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 	}
 }

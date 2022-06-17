@@ -4,9 +4,14 @@
 ******/
 package redis
 
-import "testing"
+import (
+	"github.com/RaymondCode/simple-demo/respository"
+	"testing"
+)
 
 func TestInit(t *testing.T) {
+	respository.Init()
 	InitClient()
 	GetFavouriteVideo(539203490925252608)
+	FavouriteToMysql()
 }
