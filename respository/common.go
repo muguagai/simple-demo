@@ -41,7 +41,6 @@ type User struct {
 	FollowCount   int64  `json:"follow_count,omitempty" gorm:"column:followcount"`
 	FollowerCount int64  `json:"follower_count,omitempty" gorm:"column:followercount"`
 	IsFollow      bool   `json:"is_follow,omitempty" gorm:"column:IsFollow"`
-	Token         string `gorm:"unique_index,column:token"`
 }
 
 type UserLike struct {

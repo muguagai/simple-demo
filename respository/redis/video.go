@@ -22,15 +22,17 @@ func LikedForVideo(videoID string, isFavorite bool, userID int64) (err error) {
 	pipeline := client.TxPipeline()
 	var op float64
 	key := KeyUserLikedHashPrefix
-	videokey := KeyVideoLikedSetPrefix + videoID
+	videokey1 := KeyVideoLikedSetPrefix + videoID
+	videokey2 := KeyVideoUnLikedSetPrefix + videoID
 	if isFavorite == true {
 		//将videoid添加到用户喜爱列表
 		op = 1
 		pipeline.SAdd(key, videoID)
-		pipeline.SAdd(videokey, userID)
+		pipeline.SAdd(videokey1, userID)
 	} else {
 		op = -1
-		pipeline.SRem(videokey, userID)
+		pipeline.SAdd(key, videoID)
+		pipeline.SAdd(videokey2, userID)
 	}
 
 	ret, err := pipeline.ZRevRangeWithScores(KeyVideoScoreZSet, 0, 0).Result()

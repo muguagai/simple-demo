@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"github.com/RaymondCode/simple-demo/respository"
 	"net/http"
 	"time"
 
@@ -14,7 +15,7 @@ func RateLimitMiddleware(fillInterval time.Duration, cap int64) func(c *gin.Cont
 	return func(c *gin.Context) {
 		// 如果取不到令牌就中断本次请求返回 rate limit...
 		if bucket.TakeAvailable(1) == 0 {
-			c.String(http.StatusOK, "rate limit...")
+			c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "登录次数过于频繁，请稍后重试"})
 			c.Abort()
 			return
 		}

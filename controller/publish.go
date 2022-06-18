@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/RaymondCode/simple-demo/config"
+	"github.com/RaymondCode/simple-demo/util/jwt"
 	"log"
 	"net/http"
 	"os/exec"
@@ -33,7 +34,9 @@ func Publish(c *gin.Context) {
 		return
 	}
 	token := c.PostForm("token")
-	if _, exist := respository.UsersLoginInfo[token]; !exist {
+	parseToken, err := jwt.ParseToken(token)
+	username := parseToken.Username
+	if _, exist := respository.UsersLoginInfo[username]; !exist {
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 		return
 	}

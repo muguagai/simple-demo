@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/RaymondCode/simple-demo/util/jwt"
 	"net/http"
 	"strconv"
 
@@ -21,7 +22,9 @@ func RelationAction(c *gin.Context) {
 	to_user_id := c.Query("to_user_id")
 	touserid, _ := strconv.ParseInt(to_user_id, 10, 64)
 	token := c.Query("token")
-	follower := respository.UsersLoginInfo[token]
+	parseToken, _ := jwt.ParseToken(token)
+	username := parseToken.Username
+	follower := respository.UsersLoginInfo[username]
 	actiontype := c.Query("action_type")
 	var follow_follower respository.FollowFollower
 	//作者是否存在

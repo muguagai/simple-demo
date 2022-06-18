@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+	"github.com/RaymondCode/simple-demo/util/jwt"
 	"net/http"
 	"strconv"
 	"time"
@@ -17,9 +19,14 @@ type CommentListResponse struct {
 // CommentAction no practical effect, just check if token is valid
 func CommentAction(c *gin.Context) {
 	token := c.Query("token")
+	parseToken, _ := jwt.ParseToken(token)
+	username := parseToken.Username
+	userid := c.PostForm("user_id")
+	userid = c.Query("user_id")
+	fmt.Println(userid)
 	text := c.Query("comment_text")
-	user := respository.UsersLoginInfo[token]
-	if _, exist := respository.UsersLoginInfo[token]; exist {
+	user := respository.UsersLoginInfo[username]
+	if _, exist := respository.UsersLoginInfo[username]; exist {
 		videoid := c.Query("video_id")
 		vid, _ := strconv.ParseInt(videoid, 10, 64)
 		action_type := c.Query("action_type")

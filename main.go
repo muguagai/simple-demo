@@ -16,6 +16,7 @@ func main() {
 	c := cron.New()
 	_, _ = c.AddFunc("@every 5s", redis.FavouriteToMysql)
 	c.Start()
+
 	if err := Init(); err != nil {
 		os.Exit(-1)
 	}

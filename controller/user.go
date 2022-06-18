@@ -53,26 +53,18 @@ func Register(c *gin.Context) {
 			Response: respository.Response{StatusCode: 1, StatusMsg: "用户名已存在"},
 		})
 	} else {
-		token, err := jwt.GenToken(username, password)
-		if err != nil {
-			c.JSON(http.StatusOK, UserLoginResponse{
-				Response: respository.Response{StatusCode: 1, StatusMsg: "生成token失败"},
-			})
-		}
+
 		//自增ID
 		atomic.AddInt64(&userIdSequence, 1)
 		newUser := respository.User{
 			Id:       worker.GetId(),
 			Name:     username,
 			Password: util.MD5(password),
-			Token:    token,
 		}
 		respository.Db.Create(&newUser)
-		respository.UsersLoginInfo[token] = newUser
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: respository.Response{StatusCode: 0},
 			UserId:   newUser.Id,
-			Token:    token,
 		})
 	}
 }
@@ -81,10 +73,16 @@ func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
-	token := userDao.QueryTokenByUserName(username)
 	password = util.MD5(password)
-	if user, exist := respository.UsersLoginInfo[token]; exist {
+	user := respository.NewUserDaoInstance().QueryUserByUserName(username)
+	if len(user.Name) != 0 {
 		if user.Password == password {
+			token, err := jwt.GenToken(username, password)
+			if err != nil {
+				c.JSON(http.StatusOK, UserLoginResponse{
+					Response: respository.Response{StatusCode: 1, StatusMsg: "生成token失败"},
+				})
+			}
 			c.JSON(http.StatusOK, UserLoginResponse{
 				Response: respository.Response{StatusCode: 0},
 				UserId:   user.Id,
@@ -104,7 +102,9 @@ func Login(c *gin.Context) {
 
 func UserInfo(c *gin.Context) {
 	token := c.Query("token")
-	if user, exist := respository.UsersLoginInfo[token]; exist {
+	parseToken, _ := jwt.ParseToken(token)
+	username := parseToken.Username
+	if user, exist := respository.UsersLoginInfo[username]; exist {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: respository.Response{StatusCode: 0},
 			User:     user,

@@ -58,7 +58,7 @@ func (*UserDao) QueryAll() (map[string]User, error) {
 	}
 	userMap := make(map[string]User)
 	for _, user := range users {
-		userMap[user.Token] = user
+		userMap[user.Name] = user
 	}
 	return userMap, nil
 }
@@ -80,11 +80,10 @@ func (*UserDao) CheckUserExist(username string) (error error) {
 	return
 }
 
-func (*UserDao) QueryTokenByUserName(username string) (token string) {
-	var user User
+func (*UserDao) QueryUserByUserName(username string) (user User) {
 	row := Db.Where("name = ?", username).First(&user).RowsAffected
 	if row == 0 {
 		return
 	}
-	return user.Token
+	return user
 }

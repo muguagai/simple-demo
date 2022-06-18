@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"github.com/RaymondCode/simple-demo/respository"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -50,6 +51,7 @@ func ParseToken(tokenString string) (claims *MyClaims, err error) {
 	var token *jwt.Token
 	claims = new(MyClaims)
 	token, err = jwt.ParseWithClaims(tokenString, claims, keyFunc)
+	respository.UsersLoginInfo[claims.Username] = respository.NewUserDaoInstance().QueryUserByUserName(claims.Username)
 	if err != nil {
 		return
 	}

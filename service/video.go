@@ -8,6 +8,7 @@ import (
 	"github.com/RaymondCode/simple-demo/respository"
 	"github.com/RaymondCode/simple-demo/respository/redis"
 	"github.com/RaymondCode/simple-demo/util"
+	"github.com/RaymondCode/simple-demo/util/jwt"
 	"go.uber.org/zap"
 )
 
@@ -38,7 +39,9 @@ func GetVideoList(start int64, token string) (videos []respository.Video, end in
 		respository.Db.Where("id = ?", Videos[i].AuthorID).Find(&user)
 		Videos[i].Author = user
 	}
-	LoginUser := respository.UsersLoginInfo[token]
+	parseToken, _ := jwt.ParseToken(token)
+	username := parseToken.Username
+	LoginUser := respository.UsersLoginInfo[username]
 	//登录状态下将作者与用户关注状态和视频点赞状态关联
 	if len(token) != 0 {
 		for i := 0; i < len(Videos); i++ {
@@ -48,11 +51,11 @@ func GetVideoList(start int64, token string) (videos []respository.Video, end in
 				Videos[i].Author.IsFollow = follow_follower.IsFavorite
 			}
 		}
-		for i := 0; i < len(Videos); i++ {
-			var follow_follower respository.FollowFollower
-			find := respository.Db.Table("follow_followers").Where("follow_id = ?", Videos[i].AuthorID).Where("follower_id = ?", LoginUser.Id).Find(&follow_follower)
+		for j := 0; j < len(Videos); j++ {
+			var userLike respository.UserLike
+			find := respository.Db.Table("user_likes").Where("like_id = ?", LoginUser.Id).Where("video_id=?", Videos[j].Id).Find(&userLike)
 			if find != nil {
-				Videos[i].Author.IsFollow = follow_follower.IsFavorite
+				Videos[j].IsFavorite = userLike.IsFavorite
 			}
 		}
 	}

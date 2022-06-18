@@ -7,6 +7,7 @@ import (
 )
 
 var Db *gorm.DB
+
 var UsersLoginInfo map[string]User
 
 //初始化数据库
@@ -17,10 +18,13 @@ func Init() error {
 		PrepareStmt: true,
 		Logger:      logger.Default.LogMode(logger.Info),
 	})
-	UsersLoginInfo = CreatUserinfo()
+	var user User
+	UsersLoginInfo = make(map[string]User)
+	UsersLoginInfo["0"] = user
 	return err
 }
-func CreatUserinfo() map[string]User {
+
+/*func CreatUserinfo() map[string]User {
 	all, _ := NewUserDaoInstance().QueryAll()
 	return all
-}
+}*/

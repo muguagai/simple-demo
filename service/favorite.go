@@ -17,18 +17,15 @@ func FavoriteAction(videoid string, action_type string, user respository.User) (
 	var isFavorite bool
 	respository.Db.Where("id = ?", videoid).Find(&video)
 	if action_type == "1" {
-		video.FavoriteCount++
 		isFavorite = true
 		//视频的分数增加并存储点赞记录
 		redis.LikedForVideo(videoid, isFavorite, user.Id)
 	}
 	if action_type == "2" {
-		video.FavoriteCount--
 		isFavorite = false
 		//视频的分数减少并删除点赞记录
 		redis.LikedForVideo(videoid, isFavorite, user.Id)
 	}
-	respository.Db.Save(&video)
 	return nil
 }
 
