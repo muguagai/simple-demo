@@ -1,14 +1,13 @@
 # simple-demo
 
-# Ê¹ÓÃËµÃ÷
-1. °²×°mumu°²×¿Ä£ÄâÆ÷£¬https://mumu.163.com/index.html
-2. ÏÂÔØ¶¶Éùapk£¬https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7
-3. ½øÈë¶¶ÉùAPP£¬Ë«»÷ÓÒÏÂ½Ç¡°ÎÒ¡±ÅäÖÃ·şÎñÆ÷µØÖ·£ºhttp://±¾µØIP:8080 
-4. °´ÕÕ¸Ã½Ì³Ì°²×°mysqlÊı¾İ¿â£¬²¢´´½¨douyinÊı¾İ¿â
-5. °²×°redis£¬Æô¶¯redis³Ö¾Ã»¯¹¦ÄÜ
-6. ½«respository/db_init.goÖĞµÄ"root:123@tcp"ÖĞµÄrootºÍ111111·Ö±ğÌæ»»³ÉÄãµÄmysqlÕË»§ºÍÃÜÂë
-7. ×¢ÊÍdb_init.goÖĞµÄUsersLoginInfo = CreatUserinfo()
-8. ÔËĞĞÃüÁî  go test -v db_test.go db_init.go common.go user.go£¬·ñÔò»á±¨undefinedµÄ´í£¬´íÎóÔ­Òò²Î¿¼£ºhttps://blog.csdn.net/love666666shen/article/details/119929929
-10. ½«controller/publish.goÖĞµÄipµØÖ·Ìæ»»³É×Ô¼º±¾µØµÄ
-11. ĞèÒªÏÂÔØffmpeg£¬https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip£»Ö®ºó½âÑ¹£¬½«binÄ¿Â¼ÅäÖÃµ½ÏµÍ³»·¾³±äÁ¿PathÖĞ
-12. ½øÈëÏîÄ¿¸ùÄ¿Â¼£¬ÔËĞĞgo build && ./simple-demo£¨Èç¹ûgo buildĞèÒªÏÂÔØµ«ÊÇËÙ¶ÈÂı£¬¿ÉÒÔÔËĞĞ¡°go env -w GOPROXY=https://goproxy.cn,direct¡±£©
+# ä½¿ç”¨è¯´æ˜
+1. å®‰è£…mumuå®‰å“æ¨¡æ‹Ÿå™¨ï¼Œhttps://mumu.163.com/index.html
+2. ä¸‹è½½æŠ–å£°apkï¼Œhttps://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7
+3. è¿›å…¥æŠ–å£°APPï¼ŒåŒå‡»å³ä¸‹è§’â€œæˆ‘â€é…ç½®æœåŠ¡å™¨åœ°å€ï¼šhttp://æœ¬åœ°IP:8080 
+4. æŒ‰ç…§è¯¥æ•™ç¨‹å®‰è£…mysqlæ•°æ®åº“ï¼Œå¹¶åˆ›å»ºdouyinæ•°æ®åº“
+5. å®‰è£…redisï¼Œå¯åŠ¨redisæŒä¹…åŒ–åŠŸèƒ½
+6. å°†respository/db_init.goä¸­çš„"root:123@tcp"ä¸­çš„rootå’Œ111111åˆ†åˆ«æ›¿æ¢æˆä½ çš„mysqlè´¦æˆ·å’Œå¯†ç 
+8. è¿è¡Œå‘½ä»¤  go test -v db_test.go db_init.go common.go user.goï¼Œå¦åˆ™ä¼šæŠ¥undefinedçš„é”™ï¼Œé”™è¯¯åŸå› å‚è€ƒï¼šhttps://blog.csdn.net/love666666shen/article/details/119929929
+10. å°†controller/publish.goä¸­çš„ipåœ°å€æ›¿æ¢æˆè‡ªå·±æœ¬åœ°çš„
+11. éœ€è¦ä¸‹è½½ffmpegï¼Œhttps://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zipï¼›ä¹‹åè§£å‹ï¼Œå°†binç›®å½•é…ç½®åˆ°ç³»ç»Ÿç¯å¢ƒå˜é‡Pathä¸­
+12. è¿›å…¥é¡¹ç›®æ ¹ç›®å½•ï¼Œè¿è¡Œgo build && ./simple-demoï¼ˆå¦‚æœgo buildéœ€è¦ä¸‹è½½ä½†æ˜¯é€Ÿåº¦æ…¢ï¼Œå¯ä»¥è¿è¡Œâ€œgo env -w GOPROXY=https://goproxy.cn,directâ€ï¼‰
