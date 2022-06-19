@@ -11,5 +11,6 @@ const (
 	KeyVideoLikedSetPrefix   = "douyin:video:liked:"   // set;记录视频点赞用户id;
 	KeyUserLikedHashPrefix   = "douyin:user:liked:"    //set;记录用户id的视频点赞;
 	KeyVideoUnLikedSetPrefix = "douyin:video:unliked:" // set;记录视频取消点赞用户id;
+	KeyIpCount               = "ip:"                   //记录ip访问次数
 	//KeyCommunityPostSetPrefix = "bluebell:community:" // set保存每个分区下帖子的id
 )

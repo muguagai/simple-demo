@@ -53,7 +53,6 @@ func Register(c *gin.Context) {
 			Response: respository.Response{StatusCode: 1, StatusMsg: "用户名已存在"},
 		})
 	} else {
-
 		//自增ID
 		atomic.AddInt64(&userIdSequence, 1)
 		newUser := respository.User{
@@ -61,10 +60,18 @@ func Register(c *gin.Context) {
 			Name:     username,
 			Password: util.MD5(password),
 		}
+		respository.UsersLoginInfo[newUser.Name] = newUser
 		respository.Db.Create(&newUser)
+		token, err := jwt.GenToken(username, password)
+		if err != nil {
+			c.JSON(http.StatusOK, UserLoginResponse{
+				Response: respository.Response{StatusCode: 1, StatusMsg: "生成token失败"},
+			})
+		}
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: respository.Response{StatusCode: 0},
 			UserId:   newUser.Id,
+			Token:    token,
 		})
 	}
 }
@@ -83,6 +90,7 @@ func Login(c *gin.Context) {
 					Response: respository.Response{StatusCode: 1, StatusMsg: "生成token失败"},
 				})
 			}
+			respository.UsersLoginInfo[user.Name] = user
 			c.JSON(http.StatusOK, UserLoginResponse{
 				Response: respository.Response{StatusCode: 0},
 				UserId:   user.Id,

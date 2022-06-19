@@ -29,7 +29,7 @@ type Comment struct {
 	UserID     int64
 	User       User `json:"user" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	VideoID    int64
-	Video      Video  `json:"user" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Video      Video  ` gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Content    string `json:"content,omitempty"`
 	CreateDate string `json:"create_date,omitempty"`
 }

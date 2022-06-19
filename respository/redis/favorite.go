@@ -29,7 +29,7 @@ func FavouriteToMysql() {
 			}
 			var userlike respository.UserLike
 			userID := client.SPop("douyin:video:liked:" + videoID).Val()
-
+			respository.Db.Table("user_likes").Where("like_id = ?", userID).Where("video_id=?", video.Id).Find(&userlike)
 			userlike.VideoId, _ = strconv.ParseInt(videoID, 10, 64)
 			userlike.LikeId, _ = strconv.ParseInt(userID, 10, 64)
 			userlike.IsFavorite = true
@@ -47,6 +47,7 @@ func FavouriteToMysql() {
 
 			userlike.VideoId, _ = strconv.ParseInt(videoID, 10, 64)
 			userlike.LikeId, _ = strconv.ParseInt(userID, 10, 64)
+			respository.Db.Table("user_likes").Where("like_id = ?", userID).Where("video_id=?", video.Id).Find(&userlike)
 			userlike.IsFavorite = false
 			video.FavoriteCount--
 			respository.Db.Save(&userlike)

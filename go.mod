@@ -10,6 +10,7 @@ require (
 	github.com/juju/ratelimit v1.0.1
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/yudeguang/ratelimit v0.0.0-20220329131452-0804edb8b0fc
 	go.uber.org/zap v1.21.0
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.5
@@ -35,6 +36,7 @@ require (
 	github.com/onsi/gomega v1.19.0 // indirect
 	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
+	github.com/yudeguang/iox v0.0.0-20180519090448-bffdb29c87c0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f // indirect

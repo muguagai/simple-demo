@@ -10,21 +10,20 @@ import (
 func initRouter(r *gin.Engine) {
 	// public directory is used to serve static resources
 	r.Static("/static", "./public")
-
 	apiRouter := r.Group("/douyin")
 	// basic apis
 	apiRouter.GET("/feed/", controller.Feed)
 	apiRouter.GET("/user/", controller.UserInfo)
 	apiRouter.POST("/user/register/", controller.Register)
 	apiRouter.GET("/comment/list/", controller.CommentList)
-	apiRouter.POST("/user/login/", middlewares.RateLimitMiddleware(50000*time.Millisecond, 5), controller.Login)
+	apiRouter.POST("/user/login/", middlewares.RateLimitLoginMiddleware(50000*time.Millisecond, 5), controller.Login)
 	apiRouter.Use(middlewares.JWTAuthMiddleware())
 	{
 		apiRouter.POST("/publish/action/", controller.Publish)
 		apiRouter.GET("/publish/list/", controller.PublishList)
 
 		// extra apis - I
-		apiRouter.POST("/favorite/action/", controller.FavoriteAction)
+		apiRouter.POST("/favorite/action/", middlewares.RateLimitFavouriteMiddleware(50000*time.Millisecond, 20), controller.FavoriteAction)
 		apiRouter.GET("/favorite/list/", controller.FavoriteList)
 		apiRouter.POST("/comment/action/", controller.CommentAction)
 

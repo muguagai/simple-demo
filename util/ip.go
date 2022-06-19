@@ -5,6 +5,7 @@
 package util
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"net"
 )
@@ -57,4 +58,13 @@ func getIpFromAddr(addr net.Addr) net.IP {
 	}
 
 	return ip
+}
+
+//获取请求ip
+func GetRequestIP(c *gin.Context) string {
+	reqIP := c.ClientIP()
+	if reqIP == "::1" {
+		reqIP = "127.0.0.1"
+	}
+	return reqIP
 }

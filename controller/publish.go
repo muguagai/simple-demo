@@ -50,7 +50,7 @@ func Publish(c *gin.Context) {
 		return
 	}
 	filename := filepath.Base(data.Filename)
-	user := respository.UsersLoginInfo[token]
+	user := respository.UsersLoginInfo[username]
 	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
 	saveFile := filepath.Join("./public/", finalName)
 	guid := uuid.New()
@@ -111,7 +111,9 @@ func Publish(c *gin.Context) {
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
 	token := c.Query("token")
-	user := respository.UsersLoginInfo[token]
+	parseToken, _ := jwt.ParseToken(token)
+	username := parseToken.Username
+	user := respository.UsersLoginInfo[username]
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: respository.Response{
 			StatusCode: 0,

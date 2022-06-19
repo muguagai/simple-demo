@@ -36,9 +36,10 @@ func RelationAction(c *gin.Context) {
 	if touserid == follower.Id {
 		//作者不能关注自己
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User is Author"})
-	} else if _, exist := respository.UsersLoginInfo[token]; exist {
+	} else if _, exist := respository.UsersLoginInfo[username]; exist {
 		//用户存在
 		service.RelationAction(follow, actiontype, follower, follow_follower, find)
+		c.JSON(http.StatusOK, respository.Response{StatusCode: 0})
 	} else {
 		//用户不存在
 		c.JSON(http.StatusOK, respository.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
